@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8">
+    <title>Listado de Útiles</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/css/bootstrap.min.css" integrity="sha384-MCw98/SFnGE8fJT3GXwEOngsV7Zt27NXFoaoApmYm81iuXoPkFOJwJ8ERdknLPMO" crossorigin="anonymous">
+    <link rel="stylesheet" href="main.css">
+</head>
+
+<body>
+    <div class="container">
+        <div id="lista-compras">
+            <div class="header">
+                <h1>{{ header.toLocaleUpperCase() }}</h1>
+                <button v-if="estado === 'default'" class="btn btn-primary" @click="cambiarEstado('edit')">Agregar</button>
+                <button v-else class="btn btn-cancel" @click="cambiarEstado('default')">Cancelar</button>
+            </div>
+            <div v-if="estado === 'edit'">
+                <input type="text" placeholder="Agregar nuevo" v-model="newUtil" @keyup.enter="guardarElemento">
+                <button class="btn btn-primary" :disabled="newUtil.length === 0" @click="guardarElemento">Guardar</button>
+            </div>
+            <ul>
+                <li v-for="ele in listarReversa" :class="{tachado : ele.comprado}" @click="cambiarEstadoCompra(ele)">{{ ele.util }}</li>
+            </ul>
+            <p v-if="utiles.length === 0">No existen elementos en la lista</p>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/vue/dist/vue.js"></script>
+    <!--<script src="https://cdn.jsdelivr.net/npm/vue"></script>-->
+    <script>
+        var app = new Vue({
+            el: '#lista-compras',
+            data: {
+                header: 'Listado de Útiles',
+                newUtil: '',
+                estado: 'default',
+                utiles: [{
+                    util: '10 Cuadernos',
+                    comprado: true
+                }, {
+                    util: '15 lápices',
+                    comprado: true
+                }, {
+                    util: '5 cajas de colores',
+                    comprado: false
+                }]
+            },
+            computed: {
+                listarReversa: function() {
+                    return this.utiles.slice(0).reverse();
+                }
+            },
+            methods: {
+                guardarElemento: function() {
+                    this.utiles.push({
+                        util: this.newUtil,
+                        comprado: false
+                    });
+                    this.newUtil = '';
+                },
+                cambiarEstado: function(newEstado) {
+                    this.estado = newEstado;
+                    this.newUtil = '';
+                },
+                cambiarEstadoCompra(util) {
+                    util.comprado = !util.comprado;
+                }
+            }
+        });
+    </script>
+
+
+
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+</body>
+
+</html>
